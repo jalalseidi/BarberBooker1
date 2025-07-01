@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "bookings": "Randevularım",
+    "services": "Hizmetler",
+    "barbers": "Berberler",
+    "profile": "Profil",
+    "logout": "Çıkış"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "fullName": "Ad Soyad",
+    "confirmPassword": "Şifre Tekrar",
+    "forgotPassword": "Şifremi Unuttum?",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "dontHaveAccount": "Hesabınız yok mu?",
+    "createAccount": "Hesap Oluştur",
+    "createBarberAccount": "Berber Hesabı Oluştur",
+    "rememberMe": "Beni Hatırla",
+    "welcomeBack": "Tekrar hoş geldin",
+    "joinUs": "Bugün bize katıl"
+  },
+  "home": {
+    "welcome": "BarberShop'a Hoş Geldiniz",
+    "tagline": "Premium bakım hizmetleri parmaklarınızın ucunda",
+    "bookNow": "Hemen Randevu Al",
+    "viewBookings": "Randevularımı Gör",
+    "ourServices": "Hizmetlerimiz",
+    "topBarbers": "En İyi Berberler",
+    "recentBookings": "Son Randevular"
+  },
+  "booking": {
+    "selectService": "Hizmet Seç",
+    "selectBarber": "Berber Seç",
+    "selectTime": "Saat Seç",
+    "confirmBooking": "Randevuyu Onayla",
+    "bookingConfirmed": "Randevu Onaylandı",
+    "specialRequests": "Özel İstekler",
+    "anyAvailableBarber": "Herhangi Bir Müsait Berber",
+    "duration": "Süre",
+    "price": "Fiyat",
+    "total": "Toplam"
+  },
+  "services": {
+    "haircut": "Saç Kesimi",
+    "beardTrim": "Sakal Düzeltme",
+    "shave": "Klasik Tıraş",
+    "styling": "Saç Şekillendirme",
+    "treatment": "Saç Bakımı",
+    "package": "Komple Paket"
+  },
+  "status": {
+    "confirmed": "Onaylandı",
+    "pending": "Beklemede",
+    "completed": "Tamamlandı",
+    "cancelled": "İptal Edildi"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "confirm": "Onayla",
+    "back": "Geri",
+    "next": "İleri",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "today": "Bugün",
+    "tomorrow": "Yarın",
+    "thisWeek": "Bu Hafta"
+  }
+}

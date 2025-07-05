@@ -6,45 +6,52 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Plus } from "lucide-react";
 import { getBookings, cancelBooking, Booking } from "@/api/bookings";
 import { useToast } from "@/hooks/useToast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function Bookings() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        console.log('Fetching bookings...');
-        const data = await getBookings();
-        setBookings(data.data.bookings);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load bookings. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchBookings = async () => {
+    try {
+      console.log('Fetching bookings...');
+      const data = await getBookings();
+      setBookings(data.data.bookings);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load bookings. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchBookings();
   }, [toast]);
+
+  useEffect(() => {
+    // Refetch bookings when navigated with refresh state
+    if (location.state?.refresh) {
+      fetchBookings();
+    }
+  }, [location.state]);
 
   const handleCancelBooking = async (bookingId: string) => {
     try {
       console.log('Cancelling booking:', bookingId);
       await cancelBooking(bookingId);
-      setBookings(prev => prev.map(booking =>
-        booking._id === bookingId
-          ? { ...booking, status: 'cancelled' as const }
-          : booking
-      ));
+      
+      // Refetch bookings to ensure consistency with server state
+      await fetchBookings();
+      
       toast({
         title: "Success",
         description: "Booking cancelled successfully",

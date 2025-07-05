@@ -4,7 +4,16 @@ require('dotenv').config();
 const connectDB = async () => {
   try {
     console.log('Attempting to connect to MongoDB...');
-    console.log(`Connection string: ${process.env.DATABASE_URL.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@')}`); // Log connection string with credentials masked
+
+    // Check if DATABASE_URL is defined
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL is not defined in environment variables');
+      console.error('Please create a .env file with DATABASE_URL=mongodb://username:password@host:port/database');
+      throw new Error('DATABASE_URL is not defined');
+    }
+
+    // Log connection string with credentials masked
+    console.log(`Connection string: ${process.env.DATABASE_URL.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@')}`);
 
     // Add connection options to handle timeouts and retries
     const options = {
@@ -22,11 +31,37 @@ const connectDB = async () => {
     const startTime = Date.now();
     console.log(`Starting MongoDB connection at ${new Date().toISOString()}`);
 
-    const conn = await mongoose.connect(process.env.DATABASE_URL, options);
+    // Default to a local MongoDB instance if DATABASE_URL is not a valid connection string
+    let connectionString = process.env.DATABASE_URL;
+    if (!connectionString.startsWith('mongodb://') && !connectionString.startsWith('mongodb+srv://')) {
+      console.warn('DATABASE_URL does not appear to be a valid MongoDB connection string');
+      console.warn('Defaulting to mongodb://localhost:27017/barberbooker');
+      connectionString = 'mongodb://localhost:27017/barberbooker';
+    }
+
+    const conn = await mongoose.connect(connectionString, options);
 
     console.log(`MongoDB connection established in ${Date.now() - startTime}ms`);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    // Log database name and collections
+    const dbName = conn.connection.db.databaseName;
+    console.log(`Connected to database: ${dbName}`);
+
+    const collections = await conn.connection.db.listCollections().toArray();
+    console.log(`Available collections: ${collections.map(c => c.name).join(', ') || 'No collections found'}`);
+
+    // Check if required collections exist
+    const requiredCollections = ['users', 'bookings'];
+    const missingCollections = requiredCollections.filter(
+      c => !collections.some(col => col.name === c)
+    );
+
+    if (missingCollections.length > 0) {
+      console.warn(`Missing required collections: ${missingCollections.join(', ')}`);
+      console.warn('This may cause errors when trying to create or retrieve data');
+    }
 
     // Error handling after initial connection
     mongoose.connection.on('error', err => {

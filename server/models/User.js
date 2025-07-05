@@ -32,6 +32,7 @@ const schema = new mongoose.Schema({
   refreshToken: {
     type: String,
     unique: true,
+    sparse: true,
     index: true,
   },
 }, {

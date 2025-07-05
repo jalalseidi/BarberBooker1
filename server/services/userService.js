@@ -159,14 +159,24 @@ class UserService {
     const hash = await this.generatePasswordHash(password);
 
     try {
+      // Create user without refreshToken field
       const user = new this.User({
         email,
         password: hash,
         name,
       });
 
+      // Save the user
       await user.save();
-      return user;
+
+      // Ensure refreshToken field is removed to avoid conflicts with unique index
+      await this.User.updateOne(
+        { _id: user._id },
+        { $unset: { refreshToken: "" } }
+      );
+
+      // Fetch the updated user
+      return await this.get(user._id);
     } catch (err) {
       throw new Error(`Database error while creating new user: ${err}`);
     }

@@ -4,9 +4,35 @@
  * This file contains TypeScript interfaces for all API responses.
  * These interfaces ensure type safety when working with API data.
  */
-import { Booking } from './bookings';
 import { Barber } from './barbers';
 import { Service } from './services';
+
+/**
+ * Booking interface - represents a booking entity
+ */
+export interface Booking {
+  _id: string;
+  customerId: string;
+  barberId: string;
+  serviceId: string;
+  date: string;
+  time: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  specialRequests?: string;
+  totalPrice: number;
+  createdAt: string;
+  barber: {
+    name: string;
+    profilePhoto: string;
+  };
+  service: {
+    name: string;
+    nameEn: string;
+    nameTr: string;
+    duration: number;
+    price: number;
+  };
+}
 
 /**
  * Generic API Success Response interface

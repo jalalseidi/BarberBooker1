@@ -11,7 +11,7 @@ import { TimeSlotGrid } from "@/components/TimeSlotGrid";
 import { ArrowLeft, ArrowRight, Check, Calendar as CalendarIcon } from "lucide-react";
 import { getServices, Service } from "@/api/services";
 import { getBarbers, getBarberAvailability, Barber } from "@/api/barbers";
-import { createBooking, CreateBookingData } from "@/api/bookings";
+import { createBooking, CreateBookingRequest } from "@/api/bookings";
 import { useToast } from "@/hooks/useToast";
 import { format } from "date-fns";
 
@@ -148,7 +148,7 @@ export function Booking() {
 
     try {
       setIsSubmitting(true);
-      const bookingData: CreateBookingData = {
+      const bookingData: CreateBookingRequest = {
         serviceId: selectedService._id,
         barberId: selectedBarber._id,
         date: format(selectedDate, 'yyyy-MM-dd'),
@@ -159,19 +159,52 @@ export function Booking() {
       console.log('Creating booking:', bookingData);
       const result = await createBooking(bookingData);
 
-      toast({
-        title: "Success",
-        description: result.message,
-      });
+      // Check if the response indicates success
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: result.message || "Booking created successfully!",
+        });
 
-      navigate('/bookings');
-    } catch (error) {
+        navigate('/bookings', { state: { refresh: true } });
+      } else {
+        // This shouldn't happen due to error handling in the API function,
+        // but just in case the API returns a success: false response
+        toast({
+          title: "Error",
+          description: result.error?.message || "Failed to create booking. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
       console.error('Error creating booking:', error);
+
+      // Extract error message from the error object
+      let errorMessage = "Failed to create booking. Please try again.";
+
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      }
+
+      // Show a more detailed error message to the user
       toast({
-        title: "Error",
-        description: "Failed to create booking. Please try again.",
+        title: "Booking Error",
+        description: errorMessage,
         variant: "destructive",
       });
+
+      // If the error is related to database connection, show a more helpful message
+      if (errorMessage.includes('database') || errorMessage.includes('MongoDB')) {
+        toast({
+          title: "Database Error",
+          description: "There seems to be an issue with our database. Please try again later or contact support.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

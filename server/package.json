@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "seed": "node scripts/seedData.js",
+    "test-booking": "node scripts/testBookingCreation.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

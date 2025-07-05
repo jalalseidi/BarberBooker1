@@ -49,13 +49,22 @@ router.post('/register', async (req, res, next) => {
 router.post('/logout', async (req, res) => {
   const { email } = req.body;
 
-  const user = await userService.getByEmail(email);
-  if (user) {
-    user.refreshToken = null;
-    await user.save();
-  }
+  try {
+    const user = await userService.getByEmail(email);
+    if (user) {
+      // Use mongoose directly to update the user document
+      const User = require('../models/User');
+      await User.updateOne(
+        { _id: user._id },
+        { $unset: { refreshToken: "" } }
+      );
+    }
 
-  res.status(200).json({ message: 'User logged out successfully.' });
+    res.status(200).json({ message: 'User logged out successfully.' });
+  } catch (error) {
+    logger.error(`Error during logout: ${error}`);
+    res.status(500).json({ message: 'An error occurred during logout' });
+  }
 });
 
 router.post('/refresh', async (req, res) => {

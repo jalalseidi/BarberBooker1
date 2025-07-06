@@ -14,77 +14,11 @@ const router = express.Router();
 router.get('/', asyncHandler(async (req, res) => {
   logger.info('Getting all services');
   
-  // In a real implementation, this would call a service service
-  // const services = await serviceService.getAllServices();
+  // Import Service model
+  const Service = require('../models/Service');
   
-  // Mock response
-  const services = [
-    {
-      _id: '1',
-      name: 'Classic Haircut',
-      nameEn: 'Classic Haircut',
-      nameTr: 'Klasik Saç Kesimi',
-      description: 'Professional haircut with styling',
-      descriptionEn: 'Professional haircut with styling',
-      descriptionTr: 'Şekillendirme ile profesyonel saç kesimi',
-      duration: 30,
-      price: 50,
-      category: 'haircut',
-      isActive: true
-    },
-    {
-      _id: '2',
-      name: 'Beard Trim',
-      nameEn: 'Beard Trim',
-      nameTr: 'Sakal Düzeltme',
-      description: 'Professional beard trimming and shaping',
-      descriptionEn: 'Professional beard trimming and shaping',
-      descriptionTr: 'Profesyonel sakal kesimi ve şekillendirme',
-      duration: 20,
-      price: 30,
-      category: 'beard',
-      isActive: true
-    },
-    {
-      _id: '3',
-      name: 'Classic Shave',
-      nameEn: 'Classic Shave',
-      nameTr: 'Klasik Tıraş',
-      description: 'Traditional hot towel shave',
-      descriptionEn: 'Traditional hot towel shave',
-      descriptionTr: 'Geleneksel sıcak havlu tıraşı',
-      duration: 25,
-      price: 40,
-      category: 'shave',
-      isActive: true
-    },
-    {
-      _id: '4',
-      name: 'Hair Styling',
-      nameEn: 'Hair Styling',
-      nameTr: 'Saç Şekillendirme',
-      description: 'Professional hair styling and finishing',
-      descriptionEn: 'Professional hair styling and finishing',
-      descriptionTr: 'Profesyonel saç şekillendirme ve bitirme',
-      duration: 20,
-      price: 35,
-      category: 'styling',
-      isActive: true
-    },
-    {
-      _id: '5',
-      name: 'Complete Package',
-      nameEn: 'Complete Package',
-      nameTr: 'Komple Paket',
-      description: 'Haircut, beard trim, and styling',
-      descriptionEn: 'Haircut, beard trim, and styling',
-      descriptionTr: 'Saç kesimi, sakal düzeltme ve şekillendirme',
-      duration: 60,
-      price: 100,
-      category: 'package',
-      isActive: true
-    }
-  ];
+  // Fetch services from database
+  const services = await Service.find({ isActive: true }).lean().exec();
   
   res.status(200).json({
     success: true,
@@ -106,26 +40,15 @@ router.get('/:id', asyncHandler(async (req, res) => {
   const { id } = req.params;
   logger.info(`Getting service with ID ${id}`);
   
-  // In a real implementation, this would call a service service
-  // const service = await serviceService.getServiceById(id);
-  // if (!service) {
-  //   throw ErrorTypes.NOT_FOUND(`Service with ID ${id} not found`);
-  // }
+  // Import Service model
+  const Service = require('../models/Service');
   
-  // Mock response
-  const service = {
-    _id: id,
-    name: 'Classic Haircut',
-    nameEn: 'Classic Haircut',
-    nameTr: 'Klasik Saç Kesimi',
-    description: 'Professional haircut with styling',
-    descriptionEn: 'Professional haircut with styling',
-    descriptionTr: 'Şekillendirme ile profesyonel saç kesimi',
-    duration: 30,
-    price: 50,
-    category: 'haircut',
-    isActive: true
-  };
+  // Fetch service from database
+  const service = await Service.findById(id).lean().exec();
+  
+  if (!service) {
+    throw ErrorTypes.NOT_FOUND(`Service with ID ${id} not found`);
+  }
   
   res.status(200).json({
     success: true,
@@ -150,7 +73,7 @@ router.get('/category/:category', asyncHandler(async (req, res) => {
   // Mock response
   const services = [
     {
-      _id: '1',
+      _id: '677a4f2b3c9d4e5f6a7b8c9d',
       name: 'Classic Haircut',
       nameEn: 'Classic Haircut',
       nameTr: 'Klasik Saç Kesimi',

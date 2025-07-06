@@ -1,4 +1,4 @@
-const UserService = require('../../services/userService.js');
+const container = require('../../services');
 const jwt = require('jsonwebtoken');
 
 const requireUser = async (req, res, next) => {
@@ -7,7 +7,8 @@ const requireUser = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await UserService.get(decoded.sub);
+    const userService = container.get('userService');
+    const user = await userService.get(decoded.sub);
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
     }

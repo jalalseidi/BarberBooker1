@@ -14,63 +14,11 @@ const router = express.Router();
 router.get('/', asyncHandler(async (req, res) => {
   logger.info('Getting all barbers');
   
-  // In a real implementation, this would call a barber service
-  // const barbers = await barberService.getAllBarbers();
+  // Import Barber model
+  const Barber = require('../models/Barber');
   
-  // Mock response
-  const barbers = [
-    {
-      _id: '1',
-      name: 'Mehmet Özkan',
-      email: 'mehmet@barbershop.com',
-      specialties: ['haircut', 'beard', 'styling'],
-      bio: 'Expert barber with 10+ years experience',
-      bioEn: 'Expert barber with 10+ years experience',
-      bioTr: '10+ yıl deneyimli uzman berber',
-      profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      rating: 4.8,
-      reviewCount: 127,
-      isAvailable: true,
-      workingHours: {
-        start: '09:00',
-        end: '18:00'
-      }
-    },
-    {
-      _id: '2',
-      name: 'Ali Demir',
-      email: 'ali@barbershop.com',
-      specialties: ['haircut', 'shave'],
-      bio: 'Traditional barber specializing in classic cuts',
-      bioEn: 'Traditional barber specializing in classic cuts',
-      bioTr: 'Klasik kesimler konusunda uzmanlaşmış geleneksel berber',
-      profilePhoto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      rating: 4.6,
-      reviewCount: 89,
-      isAvailable: true,
-      workingHours: {
-        start: '10:00',
-        end: '19:00'
-      }
-    },
-    {
-      _id: '3',
-      name: 'Emre Kaya',
-      email: 'emre@barbershop.com',
-      specialties: ['styling', 'treatment'],
-      bio: 'Modern styling expert and hair treatment specialist',
-      bioEn: 'Modern styling expert and hair treatment specialist',
-      bioTr: 'Modern şekillendirme uzmanı ve saç bakım uzmanı',
-      profilePhoto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
-      rating: 4.9,
-      reviewCount: 156,
-      isAvailable: false,
-      workingHours: {
-        start: '08:00',
-        end: '17:00'
-      }
-    }
-  ];
+  // Fetch barbers from database
+  const barbers = await Barber.find({ isActive: true }).lean().exec();
   
   res.status(200).json({
     success: true,
@@ -98,19 +46,73 @@ router.get('/:id', asyncHandler(async (req, res) => {
   //   throw ErrorTypes.NOT_FOUND(`Barber with ID ${id} not found`);
   // }
   
-  // Mock response
-  const barber = {
+  // Mock response - create a mapping for each barber ID
+  const mockBarbers = {
+    '677a4f1b2c8d3e4f5a6b7c8d': {
+      _id: '677a4f1b2c8d3e4f5a6b7c8d',
+      name: 'Mehmet Özkan',
+      email: 'mehmet@barbershop.com',
+      specialties: ['haircut', 'beard', 'styling'],
+      bio: 'Expert barber with 10+ years experience',
+      bioEn: 'Expert barber with 10+ years experience',
+      bioTr: '10+ yıl deneyimli uzman berber',
+      profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      rating: 4.8,
+      reviewCount: 127,
+      isAvailable: true,
+      workingHours: {
+        start: '09:00',
+        end: '18:00'
+      }
+    },
+    '677a4f1b2c8d3e4f5a6b7c8e': {
+      _id: '677a4f1b2c8d3e4f5a6b7c8e',
+      name: 'Ali Demir',
+      email: 'ali@barbershop.com',
+      specialties: ['haircut', 'shave'],
+      bio: 'Traditional barber specializing in classic cuts',
+      bioEn: 'Traditional barber specializing in classic cuts',
+      bioTr: 'Klasik kesimler konusunda uzmanlaşmış geleneksel berber',
+      profilePhoto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      rating: 4.6,
+      reviewCount: 89,
+      isAvailable: true,
+      workingHours: {
+        start: '10:00',
+        end: '19:00'
+      }
+    },
+    '677a4f1b2c8d3e4f5a6b7c8f': {
+      _id: '677a4f1b2c8d3e4f5a6b7c8f',
+      name: 'Emre Kaya',
+      email: 'emre@barbershop.com',
+      specialties: ['styling', 'treatment'],
+      bio: 'Modern styling expert and hair treatment specialist',
+      bioEn: 'Modern styling expert and hair treatment specialist',
+      bioTr: 'Modern şekillendirme uzmanı ve saç bakım uzmanı',
+      profilePhoto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+      rating: 4.9,
+      reviewCount: 156,
+      isAvailable: false,
+      workingHours: {
+        start: '08:00',
+        end: '17:00'
+      }
+    }
+  };
+  
+  const barber = mockBarbers[id] || {
     _id: id,
-    name: 'Mehmet Özkan',
-    email: 'mehmet@barbershop.com',
-    specialties: ['haircut', 'beard', 'styling'],
-    bio: 'Expert barber with 10+ years experience',
-    bioEn: 'Expert barber with 10+ years experience',
-    bioTr: '10+ yıl deneyimli uzman berber',
+    name: 'Unknown Barber',
+    email: 'unknown@barbershop.com',
+    specialties: ['haircut'],
+    bio: 'Barber not found',
+    bioEn: 'Barber not found',
+    bioTr: 'Berber bulunamadı',
     profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-    rating: 4.8,
-    reviewCount: 127,
-    isAvailable: true,
+    rating: 0,
+    reviewCount: 0,
+    isAvailable: false,
     workingHours: {
       start: '09:00',
       end: '18:00'

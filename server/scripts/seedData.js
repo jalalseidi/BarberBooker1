@@ -20,11 +20,14 @@ const Barber = require('../models/Barber');
 const Service = require('../models/Service');
 
 // Database connection
-require('../config/database');
+const { connectDB } = require('../config/database');
 
 const seedData = async () => {
   try {
     console.log('🌱 Starting seed data process...');
+    
+    // Connect to database
+    await connectDB();
 
     // Clear existing data (optional - comment out if you want to preserve existing data)
     console.log('🧹 Clearing existing data...');

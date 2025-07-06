@@ -76,6 +76,8 @@ router.get('/:id', requireUser, asyncHandler(async (req, res) => {
 router.post('/', requireUser, asyncHandler(async (req, res) => {
   const { barberId, serviceId, date, time, specialRequests } = req.body;
   logger.info(`Creating booking for user ${req.user.id}`);
+  logger.info(`Request body:`, req.body);
+  logger.info(`Received serviceId: ${serviceId}, barberId: ${barberId}`);
   
   // Validate required fields
   if (!barberId || !serviceId || !date || !time) {

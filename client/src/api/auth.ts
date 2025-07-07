@@ -30,15 +30,16 @@ export const login = async (email: string, password: string): Promise<LoginRespo
  * Register user functionality
  * @param email User email
  * @param password User password
+ * @param role User role (customer or barber)
  * @param name Optional user name
  * @returns Register response with user info
  */
-export const register = async (email: string, password: string, name?: string): Promise<RegisterResponse> => {
+export const register = async (email: string, password: string, role: 'customer' | 'barber' = 'customer', name?: string): Promise<RegisterResponse> => {
   try {
     // return { email: 'jake@example.com', id: '123' }; // pythagora_mocked_data - remove when the backend is being implemented
     const response = await api.post<RegisterResponse>(
       '/api/auth/register', 
-      { email, password, name } as RegisterRequest
+      { email, password, role, name } as RegisterRequest
     );
     return response.data as RegisterResponse;
   } catch (error) {

@@ -12,10 +12,13 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Alert, AlertDescription } from "@/components/ui/alert" // pythagora_mocked_data - DO NOT REMOVE THIS COMMENT
 import { useToast } from "@/hooks/useToast"
 import {
-  UserPlus
+  UserPlus,
+  Scissors,
+  User
   , LightbulbIcon // pythagora_mocked_data - DO NOT REMOVE THIS COMMENT
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
@@ -23,6 +26,7 @@ import { useAuth } from "@/contexts/AuthContext"
 type RegisterForm = {
   email: string
   password: string
+  role: 'customer' | 'barber'
 }
 
 export function Register() {
@@ -30,12 +34,17 @@ export function Register() {
   const { toast } = useToast()
   const { register: registerUser } = useAuth()
   const navigate = useNavigate()
-  const { register, handleSubmit } = useForm<RegisterForm>()
+  const { register, handleSubmit, watch, setValue } = useForm<RegisterForm>({
+    defaultValues: {
+      role: 'customer'
+    }
+  })
+  const selectedRole = watch('role')
 
   const onSubmit = async (data: RegisterForm) => {
     try {
       setLoading(true)
-      await registerUser(data.email, data.password);
+      await registerUser(data.email, data.password, data.role);
       toast({
         title: "Success",
         description: "Account created successfully",
@@ -87,6 +96,29 @@ export function Register() {
                 placeholder="Choose a password"
                 {...register("password", { required: true })}
               />
+            </div>
+            <div className="space-y-3">
+              <Label>I am a:</Label>
+              <RadioGroup
+                value={selectedRole}
+                onValueChange={(value) => setValue('role', value as 'customer' | 'barber')}
+                className="grid grid-cols-2 gap-4"
+              >
+                <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="customer" id="customer" />
+                  <Label htmlFor="customer" className="flex-1 cursor-pointer flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    Customer
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-accent cursor-pointer">
+                  <RadioGroupItem value="barber" id="barber" />
+                  <Label htmlFor="barber" className="flex-1 cursor-pointer flex items-center gap-2">
+                    <Scissors className="h-4 w-4" />
+                    Barber
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (

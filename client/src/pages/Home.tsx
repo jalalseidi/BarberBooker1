@@ -51,12 +51,12 @@ export function Home() {
 
   const handleServiceSelect = (service: Service) => {
     console.log('Service selected:', service.name);
-    navigate('/booking', { state: { selectedService: service } });
+    navigate('/app/booking', { state: { selectedService: service } });
   };
 
   const handleBarberSelect = (barber: Barber) => {
     console.log('Barber selected:', barber.name);
-    navigate('/booking', { state: { selectedBarber: barber } });
+    navigate('/app/booking', { state: { selectedBarber: barber } });
   };
 
   if (isLoading) {
@@ -91,7 +91,7 @@ export function Home() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Button
             size="lg"
-            onClick={() => navigate('/booking')}
+            onClick={() => navigate('/app/booking')}
             className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium px-8"
           >
             <Calendar className="h-5 w-5 mr-2" />
@@ -100,7 +100,7 @@ export function Home() {
           <Button
             size="lg"
             variant="outline"
-            onClick={() => navigate('/bookings')}
+            onClick={() => navigate('/app/bookings')}
             className="px-8"
           >
             {t('home.viewBookings')}
@@ -137,7 +137,7 @@ export function Home() {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-foreground">{t('home.ourServices')}</h2>
-          <Button variant="outline" onClick={() => navigate('/services')}>
+          <Button variant="outline" onClick={() => navigate('/app/services')}>
             View All
           </Button>
         </div>
@@ -156,7 +156,7 @@ export function Home() {
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-foreground">{t('home.topBarbers')}</h2>
-          <Button variant="outline" onClick={() => navigate('/barbers')}>
+          <Button variant="outline" onClick={() => navigate('/app/barbers')}>
             View All
           </Button>
         </div>
@@ -176,7 +176,7 @@ export function Home() {
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-foreground">{t('home.recentBookings')}</h2>
-            <Button variant="outline" onClick={() => navigate('/bookings')}>
+            <Button variant="outline" onClick={() => navigate('/app/bookings')}>
               View All
             </Button>
           </div>

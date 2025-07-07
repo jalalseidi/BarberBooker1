@@ -64,7 +64,7 @@ export function Services() {
 
   const handleServiceSelect = (service: Service) => {
     console.log('Service selected:', service.name);
-    navigate('/booking', { state: { selectedService: service } });
+    navigate('/app/booking', { state: { selectedService: service } });
   };
 
   if (isLoading) {

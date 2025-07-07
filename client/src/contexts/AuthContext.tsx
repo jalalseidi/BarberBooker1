@@ -44,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData: User = {
           id: response._id,
           email: response.email,
-          name: email.split('@')[0], // temporary
-          role: email.includes('barber') ? 'barber' : 'customer' // temporary logic
+          name: response.name || email.split('@')[0], // temporary
+          role: response.role || (email.includes('barber') ? 'barber' : 'customer') // use API role or fallback logic
         };
         
         localStorage.setItem("userData", JSON.stringify(userData));
@@ -67,7 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (email: string, password: string, role: 'customer' | 'barber' = 'customer') => {
     try {
-      const response = await apiRegister(email, password);
+      // Pass role to the API if it supports it, otherwise handle it during login
+      const response = await apiRegister(email, password, role);
       // For now, registration doesn't automatically log in
       // The user will need to log in after registration
     } catch (error) {

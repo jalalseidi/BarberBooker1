@@ -40,7 +40,7 @@ export function Login() {
         title: "Success",
         description: "Logged in successfully",
       })
-      navigate("/")
+      navigate("/app")
     } catch (error) {
       const err = error as Error;
       console.error("Login error:", err.message)

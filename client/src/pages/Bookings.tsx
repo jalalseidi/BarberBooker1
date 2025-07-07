@@ -93,7 +93,7 @@ export function Bookings() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">{t('nav.bookings')}</h1>
-        <Button onClick={() => navigate('/booking')} className="bg-gradient-to-r from-primary to-primary/80">
+        <Button onClick={() => navigate('/app/booking')} className="bg-gradient-to-r from-primary to-primary/80">
           <Plus className="h-4 w-4 mr-2" />
           {t('home.bookNow')}
         </Button>
@@ -123,7 +123,7 @@ export function Bookings() {
             <div className="text-center py-12">
               <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground text-lg mb-4">No upcoming bookings</p>
-              <Button onClick={() => navigate('/booking')}>
+              <Button onClick={() => navigate('/app/booking')}>
                 {t('home.bookNow')}
               </Button>
             </div>

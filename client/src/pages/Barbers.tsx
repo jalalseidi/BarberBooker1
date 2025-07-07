@@ -66,7 +66,7 @@ export function Barbers() {
 
   const handleBarberSelect = (barber: Barber) => {
     console.log('Barber selected:', barber.name);
-    navigate('/booking', { state: { selectedBarber: barber } });
+    navigate('/app/booking', { state: { selectedBarber: barber } });
   };
 
   if (isLoading) {

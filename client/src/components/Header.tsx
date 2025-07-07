@@ -1,4 +1,4 @@
-import { Bell, LogOut, Menu } from "lucide-react"
+import { Bell, LogOut, Menu, LayoutDashboard, Scissors } from "lucide-react"
 import { Button } from "./ui/button"
 import { ThemeToggle } from "./ui/theme-toggle"
 import { LanguageToggle } from "./LanguageToggle"
@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { Sidebar } from "./Sidebar"
 
 export function Header() {
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
   const navigate = useNavigate()
   const { t } = useTranslation()
   
@@ -32,13 +32,24 @@ export function Header() {
               <Sidebar />
             </SheetContent>
           </Sheet>
-          <div className="text-xl font-bold cursor-pointer" onClick={() => navigate("/")}>
-            BarberShop
+          <div className="flex items-center gap-2 text-xl font-bold cursor-pointer hover:text-primary transition-colors" onClick={() => navigate("/app")}>
+            <Scissors className="h-6 w-6 text-primary" />
+            <span>BarberShop</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <LanguageToggle />
           <ThemeToggle />
+          {user?.role === 'barber' && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate("/barber-dashboard")}
+              title="Barber Dashboard"
+            >
+              <LayoutDashboard className="h-5 w-5" />
+            </Button>
+          )}
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
           </Button>

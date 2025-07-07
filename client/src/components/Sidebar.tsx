@@ -20,41 +20,34 @@ export function Sidebar() {
     {
       icon: Home,
       label: t('nav.home'),
-      path: '/',
+      path: '/app',
     },
     {
       icon: Calendar,
       label: t('nav.bookings'),
-      path: '/bookings',
+      path: '/app/bookings',
     },
     {
       icon: Scissors,
       label: t('nav.services'),
-      path: '/services',
+      path: '/app/services',
     },
     {
       icon: Users,
       label: t('nav.barbers'),
-      path: '/barbers',
+      path: '/app/barbers',
     },
   ];
 
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === '/app') {
+      return location.pathname === '/app';
     }
-    return location.pathname.startsWith(path);
+    return location.pathname === path;
   };
 
   return (
     <div className="flex h-full w-64 flex-col bg-background border-r">
-      <div className="p-6">
-        <div className="flex items-center gap-2">
-          <Scissors className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold">BarberShop</span>
-        </div>
-      </div>
-      
       <Separator />
       
       <nav className="flex-1 space-y-2 p-4">
@@ -77,13 +70,21 @@ export function Sidebar() {
       <Separator />
       
       <div className="p-4 space-y-2">
-        <Button variant="ghost" className="w-full justify-start gap-3">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3"
+          onClick={() => navigate('/app/profile')}
+        >
           <User className="h-4 w-4" />
           {t('nav.profile')}
         </Button>
-        <Button variant="ghost" className="w-full justify-start gap-3">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3"
+          onClick={() => navigate('/app/settings')}
+        >
           <Settings className="h-4 w-4" />
-          Settings
+          {t('nav.settings')}
         </Button>
       </div>
     </div>

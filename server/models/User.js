@@ -35,6 +35,11 @@ const schema = new mongoose.Schema({
     sparse: true,
     index: true,
   },
+  role: {
+    type: String,
+    enum: ['customer', 'barber'],
+    default: 'customer',
+  },
 }, {
   versionKey: false,
 });

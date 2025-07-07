@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { getServices, Service } from '../api/services';
 import { getBookings, createBooking, updateBooking, cancelBooking, Booking } from '../api/bookings';
 import { getBarbers, Barber } from '../api/barbers';
 
 const CustomerDashboard: React.FC = () => {
   const { logout } = useAuth();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'services' | 'bookings' | 'profile'>('services');
   const [services, setServices] = useState<Service[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);

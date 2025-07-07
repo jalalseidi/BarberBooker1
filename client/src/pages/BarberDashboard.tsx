@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Calendar, Clock, User, Mail, Phone, Edit, Trash2, Plus, Save, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Calendar, Clock, User, Mail, Phone, Edit, Trash2, Plus, Save, X, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface Service {
   id: number;
@@ -38,11 +39,13 @@ interface AvailabilitySlot {
 
 const BarberDashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'appointments' | 'availability' | 'profile'>('appointments');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   
   // Modal states
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
@@ -96,7 +99,7 @@ const BarberDashboard: React.FC = () => {
       }
       
     } catch (err) {
-      setError('Failed to fetch barber data');
+      setError(t('common.failedToFetchBarberData'));
       console.error('Error fetching barber data:', err);
     } finally {
       setLoading(false);
@@ -117,18 +120,20 @@ const BarberDashboard: React.FC = () => {
 
       if (response.ok) {
         await fetchBarberData();
+        setSuccess(t('common.success'));
+        setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError('Failed to update booking status');
+        setError(t('common.failedToUpdateBookingStatus'));
       }
     } catch (err) {
-      setError('Error updating booking status');
+      setError(t('common.errorUpdatingBookingStatus'));
       console.error('Error updating booking status:', err);
     }
   };
 
   const handleContactCustomer = async () => {
     if (!selectedBooking || !contactSubject.trim() || !contactMessage.trim()) {
-      setError('Please fill in all contact fields');
+      setError(t('common.pleaseFillAllContactFields'));
       return;
     }
 
@@ -153,20 +158,20 @@ const BarberDashboard: React.FC = () => {
         setContactSubject('');
         setContactMessage('');
         setSelectedBooking(null);
-        // Show success message
-        alert('Message sent successfully!');
+        setSuccess(t('barber.messageSentSuccessfully'));
+        setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError('Failed to send message');
+        setError(t('common.failedToSendMessage'));
       }
     } catch (err) {
-      setError('Error sending message');
+      setError(t('common.errorSendingMessage'));
       console.error('Error sending message:', err);
     }
   };
 
   const handleSaveAvailability = async () => {
     if (!newAvailability.date || !newAvailability.start_time || !newAvailability.end_time) {
-      setError('Please fill in all availability fields');
+      setError(t('common.pleaseFillAllAvailabilityFields'));
       return;
     }
 
@@ -196,17 +201,19 @@ const BarberDashboard: React.FC = () => {
           end_time: '',
           is_available: true
         });
+        setSuccess(t('common.success'));
+        setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError('Failed to save availability');
+        setError(t('common.failedToSaveAvailability'));
       }
     } catch (err) {
-      setError('Error saving availability');
+      setError(t('common.errorSavingAvailability'));
       console.error('Error saving availability:', err);
     }
   };
 
   const handleDeleteAvailability = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this availability slot?')) {
+    if (!window.confirm(t('barber.deleteAvailabilityConfirm'))) {
       return;
     }
 
@@ -222,11 +229,13 @@ const BarberDashboard: React.FC = () => {
 
       if (response.ok) {
         await fetchBarberData();
+        setSuccess(t('common.success'));
+        setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError('Failed to delete availability');
+        setError(t('common.failedToDeleteAvailability'));
       }
     } catch (err) {
-      setError('Error deleting availability');
+      setError(t('common.errorDeletingAvailability'));
       console.error('Error deleting availability:', err);
     }
   };
@@ -263,7 +272,7 @@ const BarberDashboard: React.FC = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600">{t('common.loadingDashboard')}</p>
         </div>
       </div>
     );
@@ -276,14 +285,14 @@ const BarberDashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Barber Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {user?.name}!</p>
+              <h1 className="text-2xl font-bold text-gray-900">{t('barber.dashboard')}</h1>
+              <p className="text-gray-600">{t('barber.welcomeBack')}, {user?.name}!</p>
             </div>
             <button
               onClick={logout}
               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
             >
-              Logout
+              {t('nav.logout')}
             </button>
           </div>
         </div>
@@ -292,13 +301,30 @@ const BarberDashboard: React.FC = () => {
       {/* Error Message */}
       {error && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex items-center">
+            <AlertCircle className="w-4 h-4 mr-2" />
             {error}
             <button
               onClick={() => setError(null)}
-              className="float-right text-red-700 hover:text-red-900"
+              className="ml-auto text-red-700 hover:text-red-900"
             >
-              ×
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Message */}
+      {success && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded flex items-center">
+            <CheckCircle className="w-4 h-4 mr-2" />
+            {success}
+            <button
+              onClick={() => setSuccess(null)}
+              className="ml-auto text-green-700 hover:text-green-900"
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -309,9 +335,9 @@ const BarberDashboard: React.FC = () => {
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             {[
-              { key: 'appointments', label: 'Appointments', icon: Calendar },
-              { key: 'availability', label: 'Availability', icon: Clock },
-              { key: 'profile', label: 'Profile', icon: User }
+              { key: 'appointments', label: t('barber.appointments'), icon: Calendar },
+              { key: 'availability', label: t('barber.availability'), icon: Clock },
+              { key: 'profile', label: t('barber.profile'), icon: User }
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
@@ -335,17 +361,17 @@ const BarberDashboard: React.FC = () => {
         {activeTab === 'appointments' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900">Your Appointments</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('barber.yourAppointments')}</h2>
               <div className="text-sm text-gray-500">
-                Total appointments: {bookings.length}
+                {t('barber.totalAppointments')}: {bookings.length}
               </div>
             </div>
 
             {bookings.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No appointments</h3>
-                <p className="mt-1 text-sm text-gray-500">You don't have any appointments yet.</p>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">{t('barber.noAppointments')}</h3>
+                <p className="mt-1 text-sm text-gray-500">{t('barber.noAppointmentsMessage')}</p>
               </div>
             ) : (
               <div className="grid gap-4">
@@ -376,12 +402,12 @@ const BarberDashboard: React.FC = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Service</p>
+                            <p className="text-sm font-medium text-gray-700">{t('barber.service')}</p>
                             <p className="text-gray-900">{booking.service.name}</p>
-                            <p className="text-sm text-gray-500">${booking.service.price} • {booking.service.duration} min</p>
+                            <p className="text-sm text-gray-500">${booking.service.price} • {booking.service.duration} {t('common.min')}</p>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Date & Time</p>
+                            <p className="text-sm font-medium text-gray-700">{t('barber.dateTime')}</p>
                             <p className="text-gray-900">{formatDate(booking.date)}</p>
                             <p className="text-sm text-gray-500">{formatTime(booking.time)}</p>
                           </div>
@@ -389,17 +415,17 @@ const BarberDashboard: React.FC = () => {
 
                         {booking.notes && (
                           <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-700">Notes</p>
+                            <p className="text-sm font-medium text-gray-700">{t('barber.notes')}</p>
                             <p className="text-gray-900">{booking.notes}</p>
                           </div>
                         )}
 
                         <div className="flex items-center justify-between">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                            {t(`status.${booking.status}`)}
                           </span>
                           <p className="text-xs text-gray-500">
-                            Booked on {new Date(booking.created_at).toLocaleDateString()}
+                            {t('barber.bookedOn')} {new Date(booking.created_at).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -412,13 +438,13 @@ const BarberDashboard: React.FC = () => {
                                 onClick={() => handleUpdateBookingStatus(booking.id, 'confirmed')}
                                 className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors"
                               >
-                                Confirm
+                                {t('common.confirm')}
                               </button>
                               <button
                                 onClick={() => handleUpdateBookingStatus(booking.id, 'cancelled')}
                                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors"
                               >
-                                Cancel
+                                {t('common.cancel')}
                               </button>
                             </>
                           )}
@@ -427,7 +453,7 @@ const BarberDashboard: React.FC = () => {
                               onClick={() => handleUpdateBookingStatus(booking.id, 'completed')}
                               className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"
                             >
-                              Mark Complete
+                              {t('barber.markComplete')}
                             </button>
                           )}
                           <button
@@ -437,7 +463,7 @@ const BarberDashboard: React.FC = () => {
                             }}
                             className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm transition-colors"
                           >
-                            Contact
+                            {t('barber.contact')}
                           </button>
                         </div>
                       </div>
@@ -452,7 +478,7 @@ const BarberDashboard: React.FC = () => {
         {activeTab === 'availability' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900">Manage Availability</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('barber.manageAvailability')}</h2>
               <button
                 onClick={() => {
                   setEditingAvailability(null);
@@ -467,15 +493,15 @@ const BarberDashboard: React.FC = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                <span>Add Availability</span>
+                <span>{t('barber.addAvailability')}</span>
               </button>
             </div>
 
             {availability.length === 0 ? (
               <div className="text-center py-12">
                 <Clock className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No availability set</h3>
-                <p className="mt-1 text-sm text-gray-500">Add your available time slots to start accepting bookings.</p>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">{t('barber.noAvailabilitySet')}</h3>
+                <p className="mt-1 text-sm text-gray-500">{t('barber.noAvailabilityMessage')}</p>
               </div>
             ) : (
               <div className="grid gap-4">
@@ -490,7 +516,7 @@ const BarberDashboard: React.FC = () => {
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
                           slot.is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
-                          {slot.is_available ? 'Available' : 'Unavailable'}
+                          {slot.is_available ? t('barber.available') : t('barber.unavailable')}
                         </span>
                       </div>
                       <div className="flex space-x-2">
@@ -521,38 +547,38 @@ const BarberDashboard: React.FC = () => {
 
         {activeTab === 'profile' && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900">{t('barber.profileInformation')}</h2>
             
             <div className="bg-white rounded-lg shadow p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
+                  <label className="block text-sm font-medium text-gray-700">{t('barber.name')}</label>
                   <p className="mt-1 text-gray-900">{user?.name}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
+                  <label className="block text-sm font-medium text-gray-700">{t('barber.email')}</label>
                   <p className="mt-1 text-gray-900">{user?.email}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Role</label>
+                  <label className="block text-sm font-medium text-gray-700">{t('barber.role')}</label>
                   <p className="mt-1 text-gray-900 capitalize">{user?.role}</p>
                 </div>
                 {user?.specialties && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Specialties</label>
+                    <label className="block text-sm font-medium text-gray-700">{t('barber.specialties')}</label>
                     <p className="mt-1 text-gray-900">{user.specialties}</p>
                   </div>
                 )}
                 {user?.bio && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Bio</label>
+                    <label className="block text-sm font-medium text-gray-700">{t('barber.bio')}</label>
                     <p className="mt-1 text-gray-900">{user.bio}</p>
                   </div>
                 )}
                 {user?.experience && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Experience</label>
-                    <p className="mt-1 text-gray-900">{user.experience} years</p>
+                    <label className="block text-sm font-medium text-gray-700">{t('barber.experience')}</label>
+                    <p className="mt-1 text-gray-900">{user.experience} {t('barber.years')}</p>
                   </div>
                 )}
               </div>
@@ -568,7 +594,7 @@ const BarberDashboard: React.FC = () => {
             <div className="mt-3">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-900">
-                  {editingAvailability ? 'Edit Availability' : 'Add Availability'}
+                  {editingAvailability ? t('barber.editAvailability') : t('barber.addAvailability')}
                 </h3>
                 <button
                   onClick={() => setShowAvailabilityModal(false)}
@@ -580,7 +606,7 @@ const BarberDashboard: React.FC = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('barber.date')}</label>
                   <input
                     type="date"
                     value={newAvailability.date}
@@ -590,7 +616,7 @@ const BarberDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('barber.startTime')}</label>
                   <input
                     type="time"
                     value={newAvailability.start_time}
@@ -600,7 +626,7 @@ const BarberDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('barber.endTime')}</label>
                   <input
                     type="time"
                     value={newAvailability.end_time}
@@ -618,7 +644,7 @@ const BarberDashboard: React.FC = () => {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <label htmlFor="is_available" className="ml-2 block text-sm text-gray-900">
-                    Available for bookings
+                    {t('barber.availableForBookings')}
                   </label>
                 </div>
               </div>
@@ -628,14 +654,14 @@ const BarberDashboard: React.FC = () => {
                   onClick={() => setShowAvailabilityModal(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={handleSaveAvailability}
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors flex items-center space-x-2"
                 >
                   <Save className="w-4 h-4" />
-                  <span>Save</span>
+                  <span>{t('common.save')}</span>
                 </button>
               </div>
             </div>
@@ -650,7 +676,7 @@ const BarberDashboard: React.FC = () => {
             <div className="mt-3">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Contact {selectedBooking.customer.name}
+                  {t('barber.contactCustomer')} {selectedBooking.customer.name}
                 </h3>
                 <button
                   onClick={() => setShowContactModal(false)}
@@ -662,22 +688,22 @@ const BarberDashboard: React.FC = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('barber.subject')}</label>
                   <input
                     type="text"
                     value={contactSubject}
                     onChange={(e) => setContactSubject(e.target.value)}
-                    placeholder="Enter subject..."
+                    placeholder={t('barber.enterSubject')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('barber.message')}</label>
                   <textarea
                     value={contactMessage}
                     onChange={(e) => setContactMessage(e.target.value)}
-                    placeholder="Enter your message..."
+                    placeholder={t('barber.enterMessage')}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -689,14 +715,14 @@ const BarberDashboard: React.FC = () => {
                   onClick={() => setShowContactModal(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={handleContactCustomer}
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors flex items-center space-x-2"
                 >
                   <Mail className="w-4 h-4" />
-                  <span>Send Message</span>
+                  <span>{t('barber.sendMessage')}</span>
                 </button>
               </div>
             </div>

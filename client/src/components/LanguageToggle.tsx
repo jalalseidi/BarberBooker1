@@ -9,6 +9,7 @@ export function LanguageToggle() {
   const changeLanguage = (lng: string) => {
     console.log('Changing language to:', lng);
     i18n.changeLanguage(lng);
+    localStorage.setItem('i18nextLng', lng);
   };
 
   return (

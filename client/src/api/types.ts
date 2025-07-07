@@ -77,6 +77,8 @@ export interface LoginResponseData {
   _id: string;
   email: string;
   password?: string;
+  role?: 'customer' | 'barber' | 'admin';
+  name?: string;
   isActive: boolean;
   createdAt: string;
   lastLoginAt: string;
@@ -85,6 +87,7 @@ export interface LoginResponseData {
 export interface RegisterRequest {
   email: string;
   password: string;
+  role?: 'customer' | 'barber';
   name?: string;
 }
 

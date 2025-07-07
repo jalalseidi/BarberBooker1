@@ -166,7 +166,7 @@ export function Booking() {
           description: result.message || "Booking created successfully!",
         });
 
-        navigate('/bookings', { state: { refresh: true } });
+        navigate('/app/bookings', { state: { refresh: true } });
       } else {
         // This shouldn't happen due to error handling in the API function,
         // but just in case the API returns a success: false response

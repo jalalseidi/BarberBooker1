@@ -180,10 +180,10 @@ const Profile: React.FC = () => {
 
   if (loading && !profileData.name) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">{t('common.loading')}</p>
+          <p className="mt-4 text-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -193,8 +193,8 @@ const Profile: React.FC = () => {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('profile.title')}</h1>
-        <p className="text-gray-900">{t('profile.personalInfo')}</p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('profile.title')}</h1>
+        <p className="text-muted-foreground">{t('profile.personalInfo')}</p>
       </div>
 
       {/* Success/Error Messages */}
@@ -238,7 +238,7 @@ const Profile: React.FC = () => {
               className={`${
                 activeTab === key
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
               } whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors`}
             >
               <Icon className="w-4 h-4" />
@@ -251,81 +251,81 @@ const Profile: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'personal' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.personalInfo')}</h2>
+          <div className="bg-card rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('profile.personalInfo')}</h2>
             
             <form onSubmit={handleUpdateProfile} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('auth.fullName')}
                   </label>
                   <input
                     type="text"
                     value={profileData.name}
                     onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('auth.email')}
                   </label>
                   <input
                     type="email"
                     value={profileData.email}
                     onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('profile.phone')}
                   </label>
                   <input
                     type="tel"
                     value={profileData.phone}
                     onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('profile.dateOfBirth')}
                   </label>
                   <input
                     type="date"
                     value={profileData.dateOfBirth}
                     onChange={(e) => setProfileData({...profileData, dateOfBirth: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('profile.address')}
                   </label>
                   <textarea
                     value={profileData.address}
                     onChange={(e) => setProfileData({...profileData, address: e.target.value})}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-foreground mb-1">
                     {t('profile.preferredLanguage')}
                   </label>
                   <select
                     value={profileData.preferredLanguage}
                     onChange={(e) => setProfileData({...profileData, preferredLanguage: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   >
                     <option value="tr">{t('profile.turkish')}</option>
                     <option value="en">{t('profile.english')}</option>
@@ -348,45 +348,45 @@ const Profile: React.FC = () => {
         )}
 
         {activeTab === 'security' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.securitySettings')}</h2>
+          <div className="bg-card rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('profile.securitySettings')}</h2>
             
             <form onSubmit={handleChangePassword} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   {t('profile.currentPassword')}
                 </label>
                 <input
                   type="password"
                   value={passwordData.currentPassword}
                   onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   {t('profile.newPassword')}
                 </label>
                 <input
                   type="password"
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-foreground mb-1">
                   {t('profile.confirmNewPassword')}
                 </label>
                 <input
                   type="password"
                   value={passwordData.confirmNewPassword}
                   onChange={(e) => setPasswordData({...passwordData, confirmNewPassword: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                   required
                 />
               </div>
@@ -406,8 +406,8 @@ const Profile: React.FC = () => {
         )}
 
         {activeTab === 'delete' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.deleteAccount')}</h2>
+          <div className="bg-card rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('profile.deleteAccount')}</h2>
             
             <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
               <div className="flex">
@@ -429,7 +429,7 @@ const Profile: React.FC = () => {
               </button>
             ) : (
               <div className="space-y-4">
-                <p className="text-gray-900">{t('profile.deleteAccountConfirmText')}</p>
+                <p className="text-foreground">{t('profile.deleteAccountConfirmText')}</p>
                 <div className="flex space-x-4">
                   <button
                     onClick={handleDeleteAccount}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../components/ui/theme-provider';
-import { Settings as SettingsIcon, Globe, Bell, Shield, Palette, Monitor, Sun, Moon, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { Settings as SettingsIcon, Globe, Bell, Palette, Monitor, Sun, Moon, AlertCircle, CheckCircle, X } from 'lucide-react';
 
 interface SettingsData {
   language: string;
@@ -118,104 +118,92 @@ const Settings: React.FC = () => {
 
   if (loading && !settings.language) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">{t('common.loading')}</p>
+          <p className="mt-4 text-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('settings.title')}</h1>
-            <p className="mt-1 text-sm text-gray-900">{t('settings.description')}</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('settings.title')}</h1>
+        <p className="text-muted-foreground">{t('settings.description')}</p>
+      </div>
 
       {/* Success/Error Messages */}
       {error && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex items-center">
-            <AlertCircle className="w-4 h-4 mr-2" />
-            {error}
-            <button
-              onClick={() => setError(null)}
-              className="ml-auto text-red-700 hover:text-red-900"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="bg-destructive/15 border border-destructive/30 text-destructive px-4 py-3 rounded-lg flex items-center">
+          <AlertCircle className="w-4 h-4 mr-2" />
+          {error}
+          <button
+            onClick={() => setError(null)}
+            className="ml-auto text-destructive hover:text-destructive/80"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
       {success && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded flex items-center">
-            <CheckCircle className="w-4 h-4 mr-2" />
-            {success}
-            <button
-              onClick={() => setSuccess(null)}
-              className="ml-auto text-green-700 hover:text-green-900"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center">
+          <CheckCircle className="w-4 h-4 mr-2" />
+          {success}
+          <button
+            onClick={() => setSuccess(null)}
+            className="ml-auto text-green-700 hover:text-green-600"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
       {/* Navigation Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            {[
-              { key: 'general', label: t('settings.general'), icon: SettingsIcon },
-              { key: 'notifications', label: t('settings.notifications'), icon: Bell }
-            ].map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key as any)}
-                className={`${
-                  activeTab === key
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
+      <div className="border-b">
+        <nav className="-mb-px flex space-x-8">
+          {[
+            { key: 'general', label: t('settings.general'), icon: SettingsIcon },
+            { key: 'notifications', label: t('settings.notifications'), icon: Bell }
+          ].map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setActiveTab(key as any)}
+              className={`${
+                activeTab === key
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+              } whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors`}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'general' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('settings.general')}</h2>
+          <div className="bg-card rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('settings.general')}</h2>
             
             <div className="space-y-6">
               {/* Language Settings */}
               <div>
                 <div className="flex items-center mb-2">
-                  <Globe className="w-5 h-5 text-gray-700 mr-2" />
-                  <h3 className="text-lg font-medium text-gray-900">{t('settings.language')}</h3>
+                  <Globe className="w-5 h-5 text-foreground mr-2" />
+                  <h3 className="text-lg font-medium text-foreground">{t('settings.language')}</h3>
                 </div>
-                <p className="text-gray-900 mb-4">{t('profile.preferredLanguage')}</p>
+                <p className="text-muted-foreground mb-4">{t('profile.preferredLanguage')}</p>
                 
                 <select
                   value={settings.language}
                   onChange={(e) => handleLanguageChange(e.target.value)}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full max-w-xs px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-foreground bg-background"
                 >
                   <option value="tr">{t('profile.turkish')}</option>
                   <option value="en">{t('profile.english')}</option>
@@ -225,10 +213,10 @@ const Settings: React.FC = () => {
               {/* Theme Settings */}
               <div>
                 <div className="flex items-center mb-2">
-                  <Palette className="w-5 h-5 text-gray-700 mr-2" />
-                  <h3 className="text-lg font-medium text-gray-900">{t('settings.theme')}</h3>
+                  <Palette className="w-5 h-5 text-foreground mr-2" />
+                  <h3 className="text-lg font-medium text-foreground">{t('settings.theme')}</h3>
                 </div>
-                <p className="text-gray-900 mb-4">Choose your preferred theme</p>
+                <p className="text-muted-foreground mb-4">Choose your preferred theme</p>
                 
                 <div className="grid grid-cols-3 gap-4 max-w-md">
                   {[
@@ -242,7 +230,7 @@ const Settings: React.FC = () => {
                       className={`${
                         settings.theme === key
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                          : 'border-input bg-card text-foreground hover:bg-accent'
                       } border-2 rounded-lg p-4 flex flex-col items-center space-y-2 transition-colors`}
                     >
                       <Icon className="w-6 h-6" />
@@ -256,12 +244,12 @@ const Settings: React.FC = () => {
         )}
 
         {activeTab === 'notifications' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('settings.notifications')}</h2>
+          <div className="bg-card rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">{t('settings.notifications')}</h2>
             
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">{t('settings.emailNotifications')}</h3>
+                <h3 className="text-lg font-medium text-foreground mb-4">{t('settings.emailNotifications')}</h3>
                 <div className="space-y-4">
                   {[
                     { key: 'bookingReminders', label: t('settings.bookingReminders') },
@@ -269,7 +257,7 @@ const Settings: React.FC = () => {
                     { key: 'promotionalEmails', label: t('settings.promotionalEmails') }
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
-                      <span className="text-gray-900">{label}</span>
+                      <span className="text-foreground">{label}</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -288,14 +276,14 @@ const Settings: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">{t('settings.pushNotifications')}</h3>
+                <h3 className="text-lg font-medium text-foreground mb-4">{t('settings.pushNotifications')}</h3>
                 <div className="space-y-4">
                   {[
                     { key: 'pushNotifications', label: t('settings.pushNotifications') },
                     { key: 'smsNotifications', label: t('settings.smsNotifications') }
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between">
-                      <span className="text-gray-900">{label}</span>
+                      <span className="text-foreground">{label}</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -322,9 +310,9 @@ const Settings: React.FC = () => {
           <button
             onClick={handleSaveSettings}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md transition-colors disabled:opacity-50 flex items-center space-x-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors disabled:opacity-50 flex items-center space-x-2"
           >
-            <SettingsIcon className="w-5 h-5" />
+            <SettingsIcon className="w-4 h-4" />
             <span>{loading ? t('common.loading') : t('common.save')}</span>
           </button>
         </div>
